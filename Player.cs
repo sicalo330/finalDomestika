@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
@@ -71,6 +72,9 @@ public class Player : MonoBehaviour
         //(isWall && slide)
         flip(movHor);
 
+        //Esto permite que el jugador se mueva
+        runPlayer();
+
         anim.SetBool("isMoving", isMoving);
         anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isWall", isWall);
@@ -100,8 +104,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(wallJumpingTime);
         wallJumping = false;
     }
-
-    void FixedUpdate() {
+    void runPlayer() {
         if (!wallJumping)
         {
             rb.velocity = new Vector2(movHor * speed, rb.velocity.y);
@@ -122,7 +125,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos() {
+    void OnDrawGizmos(){
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(controller.position, dimensionBox);    
     }
