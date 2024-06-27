@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     public float speed = 3f;
     public float movHor = 1f;
     public float frontCheck = 0.51f;
+    public float frontDist = 1f;
     public float radius = 0.3f;
     public float groundRayDist = 0.5f;
     public bool isGroundFloor = false;
@@ -17,6 +18,7 @@ public class Enemy : MonoBehaviour
     private Animator anim;
 
     public LayerMask groundLayer;
+    private RaycastHit2D hit;
 
     [Header("Evitar caer en precipicio")]
     [SerializeField] private Transform controller;
@@ -44,6 +46,21 @@ public class Enemy : MonoBehaviour
 
         if(movHor != 0){
             isMoving = true;
+            rb.velocity = new Vector2(movHor * speed, rb.velocity.y);    
+
+        }
+
+        //Choque con alguna pared
+        if(Physics2D.Raycast(controller.transform.position, new Vector3(movHor, 0, 0), frontCheck, groundLayer)){
+            movHor = movHor * -1;
+        }
+  
+        //Choque con enemigos
+        hit = Physics2D.Raycast(new Vector3(transform.position.x + movHor * frontCheck,transform.position.y, transform.position.z), new Vector3(movHor, 0, 0), frontDist);
+
+        //Si choca con al gun enemigo su movHor pasará al inverso
+        if(hit.collider != null && hit.collider.CompareTag("Enemy")){
+            movHor = movHor * -1;
         }
 
         flip(movHor);
@@ -51,11 +68,7 @@ public class Enemy : MonoBehaviour
         anim.SetBool("isGroundedFloor", isGroundFloor);
     }
 
-    void FixedUpdate() {
-        rb.velocity = new Vector2(movHor * speed, rb.velocity.y);    
-    }
-
-    void flip(float x){
+    void flip(float x){ 
         Vector3 theScale = transform.localScale;
         if(x < 0){
             theScale.x = Mathf.Abs(theScale.x);
