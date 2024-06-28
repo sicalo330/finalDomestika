@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Player obj;
+    public static Player obj;
     public bool isGrounded;
     public bool isMoving;
     public float radius = 0.3f;

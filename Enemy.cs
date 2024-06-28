@@ -47,7 +47,6 @@ public class Enemy : MonoBehaviour
         if(movHor != 0){
             isMoving = true;
             rb.velocity = new Vector2(movHor * speed, rb.velocity.y);    
-
         }
 
         //Choque con alguna pared
@@ -79,8 +78,27 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D collision) {
+        //Daño al jugador
+        if(collision.gameObject.CompareTag("Player")){
+            Debug.Log("Daño al personaje");
+        }    
+    } 
+
+    void OnTriggerEnter2D(Collider2D collision) {
+        if(collision.gameObject.CompareTag("Player")){
+            //Desactiva al enemigo
+            Player.obj.rb.velocity = Vector2.up * (Player.obj.jumpForce/2);
+            getKilled();
+        }
+    }
+
     void OnDrawGizmos() {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(controller.position, dimensionBox);
+    }
+
+    void getKilled(){
+        gameObject.SetActive(false);
     }
 }
