@@ -96,7 +96,6 @@ public class Player : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
-
     }
 
     void wallJump(){
