@@ -1,40 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 public class Cam : MonoBehaviour
 {
-    public Transform bg0;
+    public Transform bg;
     public float factor0 = 1f;
-    public Transform bg1;
-    public float factor1 = 1/2f;
-    public Transform bg2;
-    public float factor2 = 1/4f;
-    private float displacemente;
-    private float iniCamposFrame;
-    private float nextCamposFrame;
-    private float fixedCameraY;
+    private bool gameStarted = false;
 
     public Player player;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        fixedCameraY = transform.position.y;
+    private void Start() {
+        gameStarted = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        iniCamposFrame = transform.position.x;
-        transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
+    void OnTriggerEnter2D(Collider2D other){
+        Debug.Log("Activado");
+            int movCamX = 19;
+            int movCamY = 13;
+            // Obten la posición del objeto con el que colisionó
+            Vector3 otherPosition = other.transform.position;
+
+            // Obten la posición del objeto actual
+            Vector3 thisPosition = transform.position;
+
+            // Calcula la diferencia en las posiciones
+            Vector3 triggerDirection = otherPosition - thisPosition;
+
+            // Verifica en qué eje fue más grande la diferencia para determinar el eje de colisión
+            if (Mathf.Abs(triggerDirection.x) > Mathf.Abs(triggerDirection.y))
+            {
+                movCamY = 0;
+                //El jugador viene desde la izquierda por lo tanto movCamX debe ser negativo
+                if(other.gameObject.CompareTag("Player") && (Player.obj.transform.position.x >= transform.position.x)){
+                    movCamX = movCamX * -1;
+                }
+                changeCamPosition(movCamX, movCamY);
+            }
+            else{
+                movCamX = 0;
+                if(other.gameObject.CompareTag("Player") && (Player.obj.transform.position.y >= transform.position.y)){
+                    movCamY = movCamY * -1;
+                }
+                changeCamPosition(movCamX, movCamY);
+            }
     }
 
-    void LateUpdate() {
-        nextCamposFrame = transform.position.x;
-
-        bg0.position = new Vector3(bg0.position.x + (nextCamposFrame - iniCamposFrame) * factor0, bg0.position.y, bg0.position.z);    
-        bg1.position = new Vector3(bg1.position.x + (nextCamposFrame - iniCamposFrame) * factor1, bg1.position.y, bg1.position.z);    
-        bg2.position = new Vector3(bg2.position.x + (nextCamposFrame - iniCamposFrame) * factor2, bg2.position.y, bg2.position.z);    
+    void changeCamPosition(int movCamX, int movCamY){
+        bg.position = new Vector3(bg.position.x + movCamX, bg.position.y + movCamY, bg.position.z);
     }
 }
+

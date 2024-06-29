@@ -1,18 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public static Game obj;
+    public int maxLives = 3;
+    public bool gamePaused = false;
+    public int score = 0;
+
+    void Awake() {
+        obj = this;    
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Start() {
+        gamePaused = false;    
+    }
+    public void addScore(int scoreGive){
+        score += scoreGive;
+    }
+
+    public void gameOver(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void OnDestroy() {
+        obj = null;    
     }
 }

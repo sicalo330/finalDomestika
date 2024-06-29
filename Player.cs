@@ -8,6 +8,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static Player obj;
+    public int lives = 3;
     public bool isGrounded;
     public bool isMoving;
     public float radius = 0.3f;
@@ -122,6 +123,13 @@ public class Player : MonoBehaviour
         else if(x > 0){
             theScale.x = Mathf.Abs(theScale.x);
             transform.localScale = theScale;
+        }
+    }
+
+    public void getDamage(){
+        lives--;
+        if(lives <= 0){
+            Game.obj.gameOver();
         }
     }
 

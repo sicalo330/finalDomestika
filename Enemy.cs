@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision) {
         //Daño al jugador
         if(collision.gameObject.CompareTag("Player")){
-            Debug.Log("Daño al personaje");
+            Player.obj.getDamage();
         }    
     } 
 
