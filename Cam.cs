@@ -5,18 +5,9 @@ using UnityEngine;
 
 public class Cam : MonoBehaviour
 {
+    public static Cam obj;
     public Transform bg;
-    public float factor0 = 1f;
-    private bool gameStarted = false;
-
-    public Player player;
-
-    private void Start() {
-        gameStarted = false;
-    }
-
     void OnTriggerEnter2D(Collider2D other){
-        Debug.Log("Activado");
             int movCamX = 19;
             int movCamY = 13;
             // Obten la posición del objeto con el que colisionó
@@ -51,4 +42,3 @@ public class Cam : MonoBehaviour
         bg.position = new Vector3(bg.position.x + movCamX, bg.position.y + movCamY, bg.position.z);
     }
 }
-

@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float wallJumpForceX;
     [SerializeField] private float wallJumpForceY;
     [SerializeField] private float wallJumpingTime;
+    [SerializeField] public bool canWallJump;
     private bool wallJumping;
 
     void Awake(){
@@ -41,7 +42,7 @@ public class Player : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {   
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
@@ -85,12 +86,17 @@ public class Player : MonoBehaviour
     void jump(){
         if (slide)
         {
-            wallJump();
+            if(canWallJump){
+                wallJump();
+            }else{
+                canWallJump = true;
+            }
         }
         else if (isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
+
     }
 
     void wallJump(){
