@@ -15,19 +15,9 @@ public class Coin : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision) {
         if(collision.gameObject.CompareTag("Player")){
             Game.obj.addScore(scoreGive);
-            //StartCoroutine(StartFalling());
+            AudioManager.obj.playCoin();
+            UIManager.obj.updateScore();
             gameObject.SetActive(false);
-        }
-    }
-
-    IEnumerator StartFalling(){
-        yield return new WaitForSeconds(fallDellay);
-        fall = true;
-    }
-
-    void Update(){
-        if(fall){
-            transform.position += Vector3.down * fallSpeed * Time.deltaTime;
         }
     }
 }

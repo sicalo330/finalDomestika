@@ -15,7 +15,8 @@ public class Game : MonoBehaviour
     }
 
     void Start() {
-        gamePaused = false;    
+        gamePaused = false;
+        UIManager.obj.StartGame();  
     }
     public void addScore(int scoreGive){
         score += scoreGive;

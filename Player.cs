@@ -10,8 +10,13 @@ public class Player : MonoBehaviour
     public static Player obj;
     public int lives = 3;
     public bool isGrounded;
+    public bool isInmune = false;
+    public bool doubleJump;
     public bool isMoving;
     public float radius = 0.3f;
+    public float inmuneTimeCnt = 0f;
+    public float inmuneTime = 0.5f;
+
     public float movHor;
     public float groundRayDist = 0.5f;
     public float speed = 3f;
@@ -19,6 +24,7 @@ public class Player : MonoBehaviour
     public float frontCheck = 0.51f;
     public LayerMask groundLayer;
     public Rigidbody2D rb;
+    private SpriteRenderer spr;
 
     private Animator anim;
 
@@ -45,11 +51,16 @@ public class Player : MonoBehaviour
     {   
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        spr = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Game.obj.gamePaused){
+            movHor = 0f;
+            return;
+        }
         movHor = Input.GetAxisRaw("Horizontal");
         isMoving = (movHor != 0f);
         isWall = Physics2D.OverlapBox(controller.position, dimensionBox, 0f, groundLayer);
@@ -77,6 +88,15 @@ public class Player : MonoBehaviour
         //Esto permite que el jugador se mueva
         runPlayer();
 
+        if(isInmune){
+            spr.enabled = !spr.enabled;
+            inmuneTimeCnt -= Time.deltaTime;
+            if(inmuneTimeCnt <= 0){
+                isInmune = false;
+                spr.enabled = true;
+            }
+        }
+
         anim.SetBool("isMoving", isMoving);
         anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isWall", isWall);
@@ -95,6 +115,7 @@ public class Player : MonoBehaviour
         else if (isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            doubleJump = true;
         }
     }
 
@@ -131,8 +152,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void goInmune(){
+        isInmune = true;
+        inmuneTimeCnt = inmuneTime;
+    }
+
     public void getDamage(){
         lives--;
+        goInmune();
+        UIManager.obj.UpdateLives();
         if(lives <= 0){
             Game.obj.gameOver();
         }

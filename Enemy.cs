@@ -81,6 +81,7 @@ public class Enemy : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision) {
         //Daño al jugador
         if(collision.gameObject.CompareTag("Player")){
+            AudioManager.obj.playHit();
             Player.obj.getDamage();
         }    
     } 
@@ -88,6 +89,7 @@ public class Enemy : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision) {
         if(collision.gameObject.CompareTag("Player")){
             //Desactiva al enemigo
+            AudioManager.obj.playEnemyHit();
             Player.obj.rb.velocity = Vector2.up * (Player.obj.jumpForce/2);
             getKilled();
         }
